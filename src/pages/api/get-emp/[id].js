@@ -9,12 +9,14 @@ export const fetchEmployerDataHandler = (req, res) => {
 
   return fetcher(url)
     .then((apiDate) => {
+      console.log('fetcher result:', apiDate);
       if (apiDate.errno) {
         throw Error(apiDate.message || 'Server error')
       }
       return sendResponse({ data: { apiDate }, res })
     })
     .catch((err) => {
+      console.log('fetcher catch err:', err);
       return sendResponse({ data: { err: err.message }, status: 500, res })
     })
 }
