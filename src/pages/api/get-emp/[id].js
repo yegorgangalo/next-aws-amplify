@@ -1,10 +1,11 @@
 import { fetcher, sendResponse } from '../common'
 
-const { BASE_SHOP_URL } = process.env
+// const { BASE_SHOP_URL } = process.env
 
 export const fetchEmployerDataHandler = (req, res) => {
   const empId = req.query.id
-  return fetcher(`${BASE_SHOP_URL}drGetEmployer/?emp_id=${empId}`)
+  // return fetcher(`${BASE_SHOP_URL}drGetEmployer/?emp_id=${empId}`)
+  return fetcher(`http://staging.shop.mydario.com/wp-json/wc/v3/drGetEmployer/?emp_id=${empId}`)
     .then((apiDate) => {
       if (apiDate.errno) {
         throw Error(apiDate.message || 'Server error')
