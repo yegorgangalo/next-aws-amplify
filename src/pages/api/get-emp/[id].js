@@ -4,7 +4,10 @@ const { BASE_SHOP_URL } = process.env
 
 export const fetchEmployerDataHandler = (req, res) => {
   const empId = req.query.id
-  return fetcher(`${BASE_SHOP_URL}drGetEmployer/?emp_id=${empId}`)
+  const url = `${BASE_SHOP_URL}drGetEmployer/?emp_id=${empId}`
+  console.log('fetchEmployerDataHandler', { BASE_SHOP_URL, url })// cloudwatch
+
+  return fetcher(url)
     .then((apiDate) => {
       if (apiDate.errno) {
         throw Error(apiDate.message || 'Server error')
