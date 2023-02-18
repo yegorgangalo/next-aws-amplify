@@ -1,11 +1,35 @@
+import { useState, useEffect } from 'react'
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
+import { fetchEmployerDataHandler } from '../pages/api/get-emp/[id]'
+import { useFetchEmp } from '@/hooks/useFetchEmp'
+import JsonFormatter from 'react-json-formatter'
 
-const inter = Inter({ subsets: ['latin'] })
+const jsonStyle = {
+  propertyStyle: { color: 'red' },
+  stringStyle: { color: 'green' },
+  numberStyle: { color: 'darkorange' }
+}
 
-export default function Home() {
+export default function Home(props) {
+  const { serverEmployerData } = props
+
+  console.log('serverEmployerData=', serverEmployerData);
+
+  const [empData, setEmpData] = useState(serverEmployerData || null)
+  const [empError, setEmpError] = useState(null)
+
+  const { data, error, loading } = useFetchEmp({ serverData: serverEmployerData })
+
+  useEffect(() => {
+    if (data?.apiDate) {
+      setEmpData(data)
+    }
+  }, [data])
+
+  useEffect(() => {
+    error && setEmpError(error)
+  }, [error])
+
   return (
     <>
       <Head>
@@ -14,9 +38,26 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        updated front
+      <main>
+        {loading && <div>...loading</div>}
+        {empData && <JsonFormatter json={JSON.stringify(empData)} tabWith={4} jsonStyle={jsonStyle} /> }
+        {empError && <p>empError: {empError}</p>}
       </main>
     </>
   )
+}
+
+export async function getServerSideProps(context) {
+  // const { query } = context
+
+  //----------------get employer data----------------------
+  const serverEmployerData = await fetchEmployerDataHandler({ query: { id: 20023 } })
+  console.log('Test getServerSideProps EmployerData=', serverEmployerData) //CloudWatch
+  //-------------------------------------------------------
+
+  return {
+    props: {
+      serverEmployerData,
+    },
+  }
 }
