@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { fetchEmployerDataHandler } from '../pages/api/get-emp/[id]'
 import { useFetchEmp } from '@/hooks/useFetchEmp'
-import JsonFormatter from 'react-json-formatter'
+// import JsonFormatter from 'react-json-formatter'
 
 const jsonStyle = {
   propertyStyle: { color: 'red' },
@@ -40,7 +40,7 @@ export default function Home(props) {
       </Head>
       <main>
         {loading && <div>...loading</div>}
-        {empData && <JsonFormatter json={JSON.stringify(empData)} tabWith={4} jsonStyle={jsonStyle} /> }
+        {empData && <div dangerouslySetInnerHTML={{__html: JSON.stringify(empData, null, '&nbsp&nbsp;').split('\n').join('<br>')}} />}
         {empError && <p>empError: {empError}</p>}
       </main>
     </>
